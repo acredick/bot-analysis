@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="guicedee.services.commons.collections4" type="repository">
+    <properties maven-id="com.guicedee.services:commons-collections4:1.0.5.5" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/guicedee/services/commons-collections4/1.0.5.5/commons-collections4-1.0.5.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
