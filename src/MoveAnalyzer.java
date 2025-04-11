@@ -16,8 +16,8 @@ public class MoveAnalyzer {
           moveTypeFrequency.put("major blunder", 0);
      }
 
-     public static void main(String arg) {
-          File folder = new File(arg); // Replace with actual path
+     public static void main(String arg, String bot_name) {
+          File folder = new File(arg);
           File[] csvFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".csv"));
 
           if (csvFiles == null || csvFiles.length == 0) {
@@ -29,8 +29,7 @@ public class MoveAnalyzer {
                processCSV(csv);
           }
 
-          // Print result
-          printMoveTypeFrequency();
+          printMoveTypeFrequency(bot_name);
      }
 
      private static void processCSV(File file) {
@@ -40,9 +39,9 @@ public class MoveAnalyzer {
                String line;
                while ((line = br.readLine()) != null) {
                     String[] parts = line.split(",");
-                    if (parts.length >= 2) {  // Ensure both x and y values are present
+                    if (parts.length >= 2) {
                          try {
-                              double y = Double.parseDouble(parts[1].trim());  // Only consider y values
+                              double y = Double.parseDouble(parts[1].trim());
                               yValues.add(y);
                          } catch (NumberFormatException ignored) {
                          }
@@ -62,19 +61,19 @@ public class MoveAnalyzer {
      }
 
      private static String classifyMove(double diff) {
-          if (diff >= 90) return "great";                // 90 and above
-          if (diff >= 70) return "strong";               // 70 to 89
-          if (diff >= 30) return "good";                 // 30 to 69
-          if (diff >= -30) return "neutral";             // -30 to 29
-          if (diff >= -60) return "mistake";             // -30 to -59
-          if (diff >= -70) return "blunder";             // -60 to -69
-          return "major blunder";                        // -70 and below
+          if (diff >= 600) return "great";
+          if (diff >= 300) return "strong";
+          if (diff >= 100) return "good";
+          if (diff >= -100) return "neutral";
+          if (diff >= -300) return "mistake";
+          if (diff >= -600) return "blunder";
+          return "major blunder";
      }
 
-     private static void printMoveTypeFrequency() {
-          System.out.println("\n--- Move Type Frequency ---");
 
-          // Total count of all moves
+     private static void printMoveTypeFrequency(String bot_name) {
+          System.out.println("\n--- " + bot_name + " Move Type Frequency ---");
+
           int totalMoves = moveTypeFrequency.values().stream().mapToInt(Integer::intValue).sum();
 
           List<String> moveOrder = Arrays.asList(
@@ -91,10 +90,8 @@ public class MoveAnalyzer {
                String label = String.format("%-15s", capitalizeWords(move));
                int count = moveTypeFrequency.getOrDefault(move, 0);
 
-               // Calculate percentage
                double percentage = (totalMoves > 0) ? (count / (double) totalMoves) * 100 : 0;
 
-               // Format and print the frequency and percentage
                System.out.printf("%-15s: %5d   %.2f%%\n", label, count, percentage);
           }
      }

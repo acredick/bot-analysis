@@ -6,11 +6,11 @@ public class Main {
      public static void main(String[] args) {
           /* Convert all XLSX files to CSV */
           ExcelToCSVConverter.convertToCSV(args[0]);
-          //ExcelToCSVConverter.convertToCSV(args[1]);
+          ExcelToCSVConverter.convertToCSV(args[1]);
 
           /* Interpret Lc0 moves */
-          MoveAnalyzer.main(args[0]);
-          //MoveAnalyzer.main(args[1]);
+          MoveAnalyzer.main(args[0], "Lc0");
+          MoveAnalyzer.main(args[1], "Stockfish");
 
 
      }
