@@ -38,7 +38,6 @@ public class ExcelToCSVConverter {
                                    if (sb.length() > 0) sb.setLength(sb.length() - 1);
                                    writer.println(sb);
                               }
-                              System.out.println("Saved CSV: " + csvFile.getName());
                          }
                     }
 
