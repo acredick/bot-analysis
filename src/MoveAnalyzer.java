@@ -16,6 +16,7 @@ public class MoveAnalyzer {
      }
 
      public static void main(String arg, String bot_name) {
+          resetMoveTypeFrequency();
           File folder = new File(arg);
           File[] csvFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".csv"));
 
@@ -25,30 +26,47 @@ public class MoveAnalyzer {
           }
 
           for (File csv : csvFiles) {
-               processCSV(csv);
+               processCSV(csv, bot_name);
           }
 
           printMoveTypeFrequency(bot_name);
      }
 
-     private static void processCSV(File file) {
+     private static void resetMoveTypeFrequency() {
+          moveTypeFrequency.put("great", 0);
+          moveTypeFrequency.put("strong", 0);
+          moveTypeFrequency.put("good", 0);
+          moveTypeFrequency.put("neutral", 0);
+          moveTypeFrequency.put("mistake", 0);
+          moveTypeFrequency.put("blunder", 0);
+          moveTypeFrequency.put("major blunder", 0);
+     }
+
+     private static void processCSV(File file, String bot_name) {
           try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                List<Double> yValues = new ArrayList<>();
 
                String line;
                while ((line = br.readLine()) != null) {
+                    line = line.trim();  // Trim whitespace
+                    if (line.isEmpty()) continue;  // Skip empty lines
+
                     String[] parts = line.split(",");
                     if (parts.length >= 2) {
                          try {
                               double y = Double.parseDouble(parts[1].trim());
                               yValues.add(y);
-                         } catch (NumberFormatException ignored) {
+                         } catch (NumberFormatException e) {
+                              System.out.println("Skipping malformed row: " + line);
                          }
                     }
                }
 
                for (int i = 0; i < yValues.size() - 1; i++) {
                     double diff = yValues.get(i + 1) - yValues.get(i);
+                    if ("stockfish".equalsIgnoreCase(bot_name)) {
+                         diff *= -1; // Reverse the diff for Stockfish bot
+                    }
                     String moveType = classifyMove(diff);
                     moveTypeFrequency.put(moveType, moveTypeFrequency.get(moveType) + 1);
                }
@@ -68,7 +86,6 @@ public class MoveAnalyzer {
           if (diff >= -600) return "blunder";
           return "major blunder";
      }
-
 
      private static void printMoveTypeFrequency(String bot_name) {
           System.out.println("\n--- " + bot_name + " Move Type Frequency ---");
