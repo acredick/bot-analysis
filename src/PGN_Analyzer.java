@@ -1,9 +1,7 @@
 import com.github.bhlangonijr.chesslib.game.Game;
-import com.github.bhlangonijr.chesslib.move.Move;
 import com.github.bhlangonijr.chesslib.pgn.PgnHolder;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,9 +9,8 @@ import java.util.Map;
 public class PGN_Analyzer {
 
      public static void main(String arg) {
-          String folderPath = arg;
 
-          File folder = new File(folderPath);
+          File folder = new File(arg);
           if (!folder.exists() || !folder.isDirectory()) {
                System.err.println("Error: The provided path is not a valid directory.");
                return;
@@ -56,12 +53,6 @@ public class PGN_Analyzer {
 
                               // Increment total games count
                               totalGames++;
-
-                              // Create a list of Move objects from the SAN strings
-                              List<Move> moves = new ArrayList<>();
-                              for (Move move : game.getHalfMoves()) {
-                                   moves.add(move);
-                              }
                          }
 
                     } catch (Exception e) {
