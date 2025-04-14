@@ -24,19 +24,37 @@ public class ExcelToCSVConverter {
 
                          try (PrintWriter writer = new PrintWriter(csvFile)) {
                               for (Row row : sheet) {
-                                   StringBuilder sb = new StringBuilder();
-                                   for (Cell cell : row) {
-                                        switch (cell.getCellType()) {
-                                             case STRING -> sb.append(cell.getStringCellValue());
-                                             case NUMERIC -> sb.append(cell.getNumericCellValue());
-                                             case BOOLEAN -> sb.append(cell.getBooleanCellValue());
-                                             case FORMULA -> sb.append(cell.getCellFormula());
-                                             default -> sb.append("");
+                                   String[] values = new String[row.getLastCellNum()];
+                                   int lastNonEmptyIndex = -1;
+                                   boolean hasData = false;
+
+                                   for (int cn = 0; cn < row.getLastCellNum(); cn++) {
+                                        Cell cell = row.getCell(cn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                                        String value = switch (cell.getCellType()) {
+                                             case STRING -> cell.getStringCellValue().trim();
+                                             case NUMERIC -> String.valueOf(cell.getNumericCellValue());
+                                             case BOOLEAN -> String.valueOf(cell.getBooleanCellValue());
+                                             case FORMULA -> cell.getCellFormula().trim();
+                                             default -> "";
+                                        };
+
+                                        if (!value.isBlank()) {
+                                             lastNonEmptyIndex = cn;
+                                             hasData = true;
                                         }
-                                        sb.append(",");
+
+                                        values[cn] = value;
                                    }
-                                   if (!sb.isEmpty()) sb.setLength(sb.length() - 1);
-                                   writer.println(sb);
+
+                                   // Write only if the row has at least two non-blank columns (x and y)
+                                   if (hasData && lastNonEmptyIndex >= 1) {
+                                        StringBuilder sb = new StringBuilder();
+                                        for (int i2 = 0; i2 <= lastNonEmptyIndex; i2++) {
+                                             sb.append(values[i2]);
+                                             if (i2 < lastNonEmptyIndex) sb.append(",");
+                                        }
+                                        writer.println(sb);
+                                   }
                               }
                          }
                     }
