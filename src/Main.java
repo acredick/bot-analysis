@@ -1,7 +1,7 @@
 public class Main {
      /**
       *
-      * @param args: args[0] = path to LC0 folder, args[1] = path to StockFish folder
+      * @param args: args[0] = path to LC0 folder, args[1] = path to StockFish folder, args[2] = path to PGN folder
       */
      public static void main(String[] args) {
           /* Convert all XLSX files to CSV */
