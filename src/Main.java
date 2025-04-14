@@ -12,6 +12,8 @@ public class Main {
           MoveAnalyzer.main(args[0], "Lc0");
           MoveAnalyzer.main(args[1], "Stockfish");
 
+          /* Analyze PGNs */
+          PGN_Analyzer.main(args[2]);
 
      }
 }
